@@ -19,8 +19,11 @@ $(document).ready(function () {
 
     // div where start button and answer choices will be displayed
     let inputRow = $("#input");
+    let questionCount = 0;
+    var outOfTimeMessage;
 
-    console.log(qAndA[0].q);
+    console.log(`question displayed ${qAndA[0].q}`);
+    console.log(`question count: ${questionCount}`);
 
     function startScreen() {
         // add start btn to row 3 with message 
@@ -38,58 +41,55 @@ $(document).ready(function () {
             btnStart.remove();
 
             // questions are displayed
-            displayQuestions();
+            displayQuestions(questionCount);
 
         });
     };
 
-    function displayQuestions() {
+    function displayQuestions(questionCount) {
+        let choicesArr = qAndA[questionCount].choices;
 
         // replace <p> text with question to row 2
-        $("#message").text(qAndA[1].q);
+        $("#message").text(qAndA[questionCount].q);
 
 
         // create answer div & fill answer div with each answer choice
-        for (let i = 0; i < qAndA[1].choices.length; i++) {
+        for (let i = 0; i < choicesArr.length; i++) {
             let answers = $("<label>")
-                .text(qAndA[1].choices[i]);
-            answers.prepend($(`<input type="radio" data-answer=${qAndA[1].choices[i]}>`));
+                .text(choicesArr[i]);
+            answers.prepend($(`<input type="radio" data-answer=${choicesArr[i]}>`));
 
             // append answer choices to row 3
             inputRow.append(answers);
         };
 
-        timer();
+        questionTimer();
 
     };
 
-    // when any answer (class) is clicked 
-    // if correct answer, display correct page
-    // if incorrect answer, display incorrect page
-
-    // if time runs out, display time's up page
-
     // define timer for questions
-    function timer() {
+    function questionTimer() {
         var timeLeft = 10;
         var intervalId = setInterval(decrement, 1000);
+        // append timer to row 4  
         $("#row4").html(`<p>${timeLeft} seconds</p>`);
 
+        // start 15 second count down
         function decrement() {
             timeLeft--;
             $("#row4").html(`<p>${timeLeft} seconds</p>`);
+            // if time runs out, display time's up page
             if (timeLeft === 0) {
-              stop();
-              alert("Time Up!");
+                stopTimer();
+                outOfTime();
             }
-          }
-          function stop() {
-            clearInterval(intervalId);
-          }
+        }
 
-        // append timer to row 4  
-        // start 15 second count down
+        function stopTimer() {
+            clearInterval(intervalId);
+        }
     };
+
 
     // correct answer fxn
     function correctAnswer() {
@@ -97,6 +97,9 @@ $(document).ready(function () {
         // row 3 displays correct answer
         // row 4 displays image
         // 5 second timer
+        // when timer === 0
+        // questioncount++
+        // displayquestion()
     };
 
     // incorrect answer fxn
@@ -105,21 +108,47 @@ $(document).ready(function () {
         // row 3 displays correct answer
         // row 4 displays image
         // 5 second timer
+        // when timer === 0
+        // questioncount++
+        // displayquestion()
     };
 
     // time's up fxn
     function outOfTime() {
+        console.log(`out of time method called`);
         // row 2 text shows time is up
+        // clearInterval(intervalId);
+        $("#message").text(`You run out of time for this question!`)
         // row 3 displays correct answer
-        // row 4 displays image
-        // 5 second timer
+        $("#input").text(`The correct answer was ${qAndA[questionCount].a}.`)
+        outOfTimeMessage = setTimeout(nextQuestion, 5000);
     };
 
+    function nextQuestion() {
+        clearTimeout(outOfTimeMessage);
+        questionCount++;
+        displayQuestions(questionCount);
+    }
+
     // once all questions have been answered
-    // row 2 displays game over message
-    // row 3 displays start button
-    // row 4 displays correct and incorrect answer counts
+    function gameOver() {
+        // row 2 displays game over message
+        // row 3 displays try again button - onclick calls restart()
+        // row 4 displays correct and incorrect answer counts
+    };
+
+    // restart fxn
+    function restart() {
+        // resets question count to 0
+        // removes each element
+        // calls displayQuestions()
+    };
+
 
     startScreen();
+
+    // when any answer (class) is clicked 
+    // if correct answer, display correct page
+    // if incorrect answer, display incorrect page
 
 });
