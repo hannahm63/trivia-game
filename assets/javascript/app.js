@@ -57,7 +57,6 @@ $(document).ready(function () {
         // replace <p> text with question to row 2
         $("#message").text(qAndA[questionCount].q);
 
-
         // create answer div & fill answer div with each answer choice
         for (let i = 0; i < choicesArr.length; i++) {
             let answers = $("<label>")
@@ -79,7 +78,7 @@ $(document).ready(function () {
         // append timer to row 4  
         $("#row4").html(`<p>${timeLeft} seconds</p>`);
 
-        // start 15 second count down
+        // start 10 second count down
         function decrement() {
             timeLeft--;
             $("#row4").html(`<p>${timeLeft} seconds</p>`);
@@ -133,9 +132,9 @@ $(document).ready(function () {
         // remove timer from display
         $("#row4").empty();
         // row 2 text shows time is up
-        $("#message").text(`You ran out of time for this question!`)
+        $("#message").text(`You ran out of time for this question!`);
         // row 3 displays correct answer
-        $("#input").text(`The correct answer is ${qAndA[questionCount].a}.`)
+        $("#input").text(`The correct answer is ${qAndA[questionCount].a}.`);
         displayMessage = setTimeout(nextQuestion, 2000);
     };
 
@@ -183,10 +182,9 @@ $(document).ready(function () {
         inputRow.empty();
         $("#message").empty();
         $("#row4").empty();
-        // calls displayQuestions()
+        // starts quiz
         displayQuestions(questionCount);
     };
-
 
     startScreen();
 
